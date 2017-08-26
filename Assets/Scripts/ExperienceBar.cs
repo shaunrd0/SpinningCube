@@ -4,86 +4,88 @@ using UnityEngine.UI;
 
 
 public class ExperienceBar : MonoBehaviour {
-
-  public float expObtained = 0;
-  public int level = 0;
-  public float Increment = 10;
-  public GameObject levelText;
-  public float barWidth;
-  public float barHeight;
-    
-  GameObject expBar;
   // Eventually.. public RectTransform gainedExp
   //Array used as expRequired[leveldesired]
-  public float expRequired = 100;
-  public float clicksNeeded = 10;
-  float barMovement;
-  float barPosition;
+
+  [SerializeField]
+  private int level = 1;
+  [SerializeField]
+  private float expObtained = 0;
+  [SerializeField]
+  private float expRequired = 100;
+  [SerializeField]
+  private float fillAmount;
+  [SerializeField]
+  private GameObject levelText;
+  [SerializeField]
+  private Image expBarSprite;
+  [SerializeField]
+  private float lerpSpeed;
+  [SerializeField]
+  private int clicks;
     
+  private float clicksNeeded = 10;
+  private float previousExpRequired;
+  private float barMovement;
+  private float barPosition;
+  private float Increment = 10;
+  
   // Use this for initialization
   void Start () {
-    expBar = this.gameObject;
-    barPosition = 0;
-    this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector3(barPosition, barHeight);
+    fillAmount = 0;
   }
 
   // Update is called once per frame
   void Update () {
-    //Check if Exp bar is full
 
-    if(this.gameObject.GetComponent<RectTransform>().sizeDelta.x == barWidth || expBar.GetComponent<RectTransform>().sizeDelta.x > barWidth)
+    if (fillAmount != expBarSprite.fillAmount)
+    {
+    expBarSprite.fillAmount = Mathf.Lerp(expBarSprite.fillAmount, fillAmount, Time.deltaTime * lerpSpeed);
+    }
+    
+    //Check if Exp bar is full
+    if (expBarSprite.fillAmount >= 1.0f)
     {
       LevelUp();
       clicksNeeded = (expRequired - expObtained) / Increment;
-      barPosition = 0;
-      this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector3(barPosition, barHeight);
+      fillAmount = 0;
     }
   }
 
   public void ExpMore()
   {
+    ++clicks;
     expObtained = expObtained + Increment;
-    //Since increment is 10 && Level 1 = 100
-    //10 clicks per level DIVDED BY clicks required for exp gain
-    //int clicks = 0;
-    //clicks++;
-    barMovement = (barWidth / clicksNeeded) / 10.0f ; 
-    barPosition = barMovement + barPosition;
-    Debug.Log("barPosition = " + barPosition);
-    //use time.deltatime to smooth this out to make it look better?
-    this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector3(barPosition * 10, barHeight); 
+    fillAmount = (expObtained / expRequired);
+    Debug.Log("fillAmount = " + fillAmount);
   }
 
   public void LevelUp()
   {
-    level++;
+    ++level;
     levelText.GetComponent<Text>().text = level.ToString();
-    expRequired = Mathf.Pow(expRequired, 1.05f) + expRequired ;
+    previousExpRequired = expRequired;
+    expObtained = 0;
+    expRequired = Mathf.Pow(expRequired, 1.05f);
   }
 
   public void ResetExp()
   {
-    barPosition = 0;
-    this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector3(barPosition, barHeight);
-    expObtained = 0;
     level = 1;
     levelText.GetComponent<Text>().text = level.ToString();
+    fillAmount = 0;
+    expObtained = 0;
     expRequired = 100;
     clicksNeeded = 10;
+    clicks = 0;
   }
 
   public void ExpLess()
   {
+    --clicks;
     expObtained = expObtained - Increment;
-    //Since increment is 10 && Level 1 = 100
-    //10 clicks per level DIVDED BY clicks required for exp gain
-    //int clicks = 0;
-    //clicks++;
-    barMovement = (barWidth / clicksNeeded) / 10.0f;
-    barPosition = barPosition - barMovement;
-    Debug.Log("barPosition = " + barPosition);
-    //use time.deltatime to smooth this out to make it look better?
-    this.gameObject.GetComponent<RectTransform>().sizeDelta = new Vector3(barPosition * 10, barHeight);
+    fillAmount = (expObtained / expRequired);
+    Debug.Log("fillAmount = " + fillAmount);
   }
 
 }
