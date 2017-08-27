@@ -29,7 +29,21 @@ public class ExperienceBar : MonoBehaviour {
   private float barMovement;
   private float barPosition;
   private float Increment = 10;
-  
+
+  private struct levelReqA
+  {
+    int levelA;
+    float expRequiredA;
+    float clicksRequiredA;
+  }
+
+  private struct levelReqB
+  {
+    public int levelB;
+    public float expRequiredB;
+    public float clicksRequiredB;
+  }
+
   // Use this for initialization
   void Start () {
     fillAmount = 0;
@@ -86,6 +100,19 @@ public class ExperienceBar : MonoBehaviour {
     expObtained = expObtained - Increment;
     fillAmount = (expObtained / expRequired);
     Debug.Log("fillAmount = " + fillAmount);
+  }
+
+  private levelReqB LevelRequirement(int level, levelReqB levelB)
+  {
+    ++level;
+    levelText.GetComponent<Text>().text = level.ToString();
+    levelB.expRequiredB = Mathf.Pow(100, 1.05f);
+    expObtained = 0;
+
+    
+
+    expRequired = Mathf.Pow(expRequired, 1.05f);
+    
   }
 
 }
