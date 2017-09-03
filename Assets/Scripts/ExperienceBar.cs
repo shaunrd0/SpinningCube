@@ -4,16 +4,14 @@ using UnityEngine.UI;
 
 
 public class ExperienceBar : MonoBehaviour {
-  // Eventually.. public RectTransform gainedExp
-  //Array used as expRequired[leveldesired]
 
-
-  //playerdata - needs saved
+  //Playerdata -- Needs saved
   public int currentLevel = 1;
   public float currentExp = 0;
   public float currentRequirement = 100;
-  public GameObject currentLevelText;
 
+  [SerializeField]
+  private GameObject currentLevelText;
   [SerializeField]
   private float fillAmount;
   [SerializeField]
@@ -32,6 +30,11 @@ public class ExperienceBar : MonoBehaviour {
   // Use this for initialization
   void Start () {
     fillAmount = currentExp / currentRequirement;
+  }
+
+  public void OnDestroy()
+  {
+    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().Save();
   }
 
   // Update is called once per frame

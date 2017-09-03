@@ -5,113 +5,117 @@ public class SpinningCube : MonoBehaviour
 {
 
   //Playerdata -- Needs saved
-    public float currentSpeed = 20f;
-    public float currentIncrement = 10f;
+  public float currentSpeed = 20f;
+  public float currentIncrement = 10f;
 
 
-    private string RotationDirection = "Up";
-	  private Vector3 m_RotationDirection = Vector3.up;
-    private Vector3 rotationOrigin;
-    private Vector3 stopRotation = Vector3.zero;
-    private Vector3 tempRotation;
-    private float angle2 = 0;
-    private float angledif, angle1;
-    private float angleSum = 0;
+  private string RotationDirection = "Up";
+  private Vector3 m_RotationDirection = Vector3.up;
+  private Vector3 rotationOrigin;
+  private Vector3 stopRotation = Vector3.zero;
+  private Vector3 tempRotation;
+  private float angle2 = 0;
+  private float angledif, angle1;
+  private float angleSum = 0;
 
   [SerializeField]
-    private int rotations;
+  private int rotations;
+
+  public void OnDestroy()
+  {
+    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().Save();
+  }
 
   public void ToggleRotationDirection()
-	{
+  {
 
-		if (m_RotationDirection == Vector3.up) 
-		{
-			m_RotationDirection = Vector3.down;
-            RotationDirection = "Down";
-		}
-		else 
-		{
-			m_RotationDirection = Vector3.up;
-            RotationDirection = "Up";
-        }
-        Debug.Log("Toggled rotation direction: " + RotationDirection);
-    }
-
-    public void ToggleRotation()
+    if (m_RotationDirection == Vector3.up) 
     {
-        Debug.Log("Stopping Rotation. Last known rotation direction: " + RotationDirection);
-        stopRotation = Vector3.zero;
+	    m_RotationDirection = Vector3.down;
+      RotationDirection = "Down";
+    }
+    else 
+    {
+	    m_RotationDirection = Vector3.up;
+      RotationDirection = "Up";
+    }
+    Debug.Log("Toggled rotation direction: " + RotationDirection);
+
+  }
+
+  public void ToggleRotation()
+  {
+    Debug.Log("Stopping Rotation. Last known rotation direction: " + RotationDirection);
+    stopRotation = Vector3.zero;
         
-        if (m_RotationDirection == stopRotation)
-        {
-            m_RotationDirection = tempRotation; 
-        }
-                else {
-            tempRotation = m_RotationDirection;
-            m_RotationDirection = stopRotation;
-        }
-    }
-
-    public void RaiseRotationSpeed()
+    if (m_RotationDirection == stopRotation)
     {
-        currentSpeed = currentSpeed + currentIncrement;
-
-        Debug.Log("Rotation Speed: " + currentSpeed);
+      m_RotationDirection = tempRotation; 
     }
-
-    public void LowerRotationSpeed()
-    {
-        currentSpeed = currentSpeed - currentIncrement;
-
-        Debug.Log("Rotation Speed: " + currentSpeed);
+    else {
+      tempRotation = m_RotationDirection;
+      m_RotationDirection = stopRotation;
     }
+  }
 
-    public void ResetRotationSpeed()
-    {
-        currentSpeed = 20.0f;
-        Debug.Log("Rotation Speed Reset");
-    }
+  public void RaiseRotationSpeed()
+  {
+    currentSpeed = currentSpeed + currentIncrement;
+    Debug.Log("Rotation Speed: " + currentSpeed);
+  }
 
-    public void ChangeColorWhite()
-    {
-        GameObject.FindGameObjectsWithTag("Player");
-        gameObject.GetComponent<Renderer>().material.color = Color.white;
-    }
+  public void LowerRotationSpeed()
+  {
+    currentSpeed = currentSpeed - currentIncrement;
+    Debug.Log("Rotation Speed: " + currentSpeed);
+  }
 
-    public void ChangeColorBlue()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.blue;
-    }
+  public void ResetRotationSpeed()
+  {
+    currentSpeed = 20.0f;
+    Debug.Log("Rotation Speed Reset");
+  }
 
-    public void ChangeColorBlack()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.black;
-    }
+  public void ChangeColorWhite()
+  {
+    GameObject.FindGameObjectsWithTag("Player");
+    gameObject.GetComponent<Renderer>().material.color = Color.white;
+  }
 
-    public void ChangeColorGreen()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.green;
-    }
+  public void ChangeColorBlue()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.blue;
+  }
 
-    public void ChangeColorRed()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.red;
-    }
+  public void ChangeColorBlack()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.black;
+  }
 
-    public void ChangeColorMagenta()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.magenta;
-    }
+  public void ChangeColorGreen()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.green;
+  }
 
-    public void ChangeColorYellow()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.yellow;
-    }
+  public void ChangeColorRed()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.red;
+  }
 
-    public void ChangeColorCyan()
-    {
-        gameObject.GetComponent<Renderer>().material.color = Color.cyan;
-    }
+  public void ChangeColorMagenta()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.magenta;
+  }
+
+  public void ChangeColorYellow()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.yellow;
+  }
+
+  public void ChangeColorCyan()
+  {
+    gameObject.GetComponent<Renderer>().material.color = Color.cyan;
+  }
 
   void FixedUpdate()
   {
@@ -126,7 +130,7 @@ public class SpinningCube : MonoBehaviour
     //rotations += (int)(m_Speed / 360);
 
     //if object is rotating, and angle difference is less than 0
-    //If object has rotated 20 degrees (m_speed = 20), when angle1 = 350, && angle2 = 10
+    //If object has rotated 20 degrees (currentSpeed = 20), when angle1 = 350, && angle2 = 10
     //angle2(10)-angle1(350) = -340
     //Object has rotated past 360
     if ((currentSpeed > 0) && (angledif < 0))

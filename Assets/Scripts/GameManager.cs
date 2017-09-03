@@ -20,15 +20,15 @@ public class GameManager : MonoBehaviour {
     public float increment;
   }
 
+	// Update is called once per frame
+	void Update () {
+		
+	}
+
 
 	// Use this for initialization
 	void Start () {
     Load();
-	}
-
-	// Update is called once per frame
-	void Update () {
-		
 	}
 
   void OnEnable()
@@ -67,7 +67,6 @@ public class GameManager : MonoBehaviour {
     bf.Serialize(file, data);
     file.Close();
     Debug.Log("Saved");
-
   }
 
   public void Load()
@@ -85,11 +84,6 @@ public class GameManager : MonoBehaviour {
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp = data.experience;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentRequirement = data.requirement;
       Debug.Log("Loaded");
-
-
-
     }
-
   }
-
 }

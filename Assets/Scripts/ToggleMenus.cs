@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class ToggleMenus : MonoBehaviour
 {
-
+  //Menus
   public GameObject RotMenu;
   public GameObject ColorMenu;
   public GameObject ShapesMenu;
   public GameObject LightingMenu;
   public GameObject ExpMenu;
 
+  private bool ActiveMenu = false;
+
+  //Shapes - Prefabs
   public GameObject Square;
   public GameObject Sphere;
   public GameObject Cylinder;
@@ -17,16 +21,30 @@ public class ToggleMenus : MonoBehaviour
   public GameObject Temp;
   public GameObject mySpawn;
 
-
   private string Spawn = "Spawn";
   private string Active = "Cube";
-  private bool ActiveMenu = false;
+
+  //Use with lighting menu
+  //private GameObject lighting = GameObject.FindGameObjectWithTag("Lighting");
+
+  public float lightRotX, lightRotY, lightRotZ;
+  public GameObject[] buttons;
+
 
   // Use this for initialization
   void Start()
   {
     Temp = Square;
+    lightRotX = 0;
+    lightRotY = 0;
+    lightRotZ = 0;
+    EditLightingRotation();
+    //EditLightingLocation();
+  }
 
+  public void Update()
+  {
+    GameObject.FindGameObjectWithTag("Lighting").transform.Rotate(lightRotX, lightRotY, lightRotZ);
   }
 
   public void ToggleRotationMenu()
@@ -133,7 +151,6 @@ public class ToggleMenus : MonoBehaviour
     ColorMenu.gameObject.SetActive(false);
     LightingMenu.gameObject.SetActive(false);
     ExpMenu.gameObject.SetActive(false);
-
   }
 
   public void ChangeShapeSquare()
@@ -172,4 +189,51 @@ public class ToggleMenus : MonoBehaviour
     Debug.Log(Active);
   }
 
+  public void EditLightingRotation()
+  {
+    buttons = GameObject.FindGameObjectsWithTag("RotationMenuButtons");
+    foreach (Object button in buttons)
+    {
+      gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+    }
+
+    GameObject.Find("X Button").GetComponent<Button>().onClick.AddListener(() => { EditLightingRotationX(); });
+    GameObject.Find("Y Button").GetComponent<Button>().onClick.AddListener(() => { EditLightingRotationY(); });
+    GameObject.Find("Z Button").GetComponent<Button>().onClick.AddListener(() => { EditLightingRotationZ(); });
+  }
+
+  public void EditLightingLocation()
+  {
+    buttons = GameObject.FindGameObjectsWithTag("RotationMenuButtons");
+    foreach (Object button in buttons)
+    {
+      gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+    }
+    //
+    //CHANGE THESE TO LOCATION NOT ROTATION
+    //
+    GameObject.Find("X Button").GetComponent<Button>().onClick.AddListener(() => { EditLightingRotationX(); });
+    GameObject.Find("Y Button").GetComponent<Button>().onClick.AddListener(() => { EditLightingRotationY(); });
+    GameObject.Find("Z Button").GetComponent<Button>().onClick.AddListener(() => { EditLightingRotationZ(); });
+  }
+
+  public void EditLightingLocationX()
+  {
+    //lightRotX = 20 * Time.deltaTime; 
+  }
+
+  public void EditLightingRotationX()
+  {
+    lightRotX = 20 * Time.deltaTime;
+  }
+
+  public void EditLightingRotationY()
+  {
+    lightRotY = 20 * Time.deltaTime;
+  }
+
+  public void EditLightingRotationZ()
+  {
+    lightRotZ = 20 * Time.deltaTime;
+  }
 }
