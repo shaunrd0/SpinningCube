@@ -67,6 +67,7 @@ public class ExperienceBar : MonoBehaviour {
     previousExpRequired = expRequired;
     expObtained = 0;
     expRequired = Mathf.Pow(expRequired, 1.05f);
+    GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RaiseRotationSpeed();
   }
 
   public void ResetExp()
