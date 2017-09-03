@@ -3,8 +3,10 @@ using System.Collections;
 
 public class SpinningCube : MonoBehaviour 
 {
-	public float m_Speed = 20f;
-    public float increments = 10f;
+
+  //Playerdata -- Needs saved
+    public float currentSpeed = 20f;
+    public float currentIncrement = 10f;
 
 
     private string RotationDirection = "Up";
@@ -52,21 +54,21 @@ public class SpinningCube : MonoBehaviour
 
     public void RaiseRotationSpeed()
     {
-        m_Speed = m_Speed + increments;
+        currentSpeed = currentSpeed + currentIncrement;
 
-        Debug.Log("Rotation Speed: " + m_Speed);
+        Debug.Log("Rotation Speed: " + currentSpeed);
     }
 
     public void LowerRotationSpeed()
     {
-        m_Speed = m_Speed - increments;
+        currentSpeed = currentSpeed - currentIncrement;
 
-        Debug.Log("Rotation Speed: " + m_Speed);
+        Debug.Log("Rotation Speed: " + currentSpeed);
     }
 
     public void ResetRotationSpeed()
     {
-        m_Speed = 20.0f;
+        currentSpeed = 20.0f;
         Debug.Log("Rotation Speed Reset");
     }
 
@@ -111,16 +113,11 @@ public class SpinningCube : MonoBehaviour
         gameObject.GetComponent<Renderer>().material.color = Color.cyan;
     }
 
-    public void Start()
-    {
-      Vector3 rotationOrigin = GameObject.FindGameObjectWithTag("Player").transform.rotation.eulerAngles;
-    }
-
   void FixedUpdate()
   {
     //Set angle1 = eulerAngle of axis being rotated prior to applying rotation
     angle1 = this.gameObject.transform.rotation.eulerAngles.y;
-    transform.Rotate(m_RotationDirection * Time.deltaTime * m_Speed);
+    transform.Rotate(m_RotationDirection * Time.deltaTime * currentSpeed);
     //angle2 = eulerAngle of axis after rotation applied
     angle2 = this.gameObject.transform.rotation.eulerAngles.y;
     //Difference between angle2 and angle1, how much the object rotated between frames
@@ -132,7 +129,7 @@ public class SpinningCube : MonoBehaviour
     //If object has rotated 20 degrees (m_speed = 20), when angle1 = 350, && angle2 = 10
     //angle2(10)-angle1(350) = -340
     //Object has rotated past 360
-    if ((m_Speed > 0) && (angledif < 0))
+    if ((currentSpeed > 0) && (angledif < 0))
     {
       ++rotations;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().ExpMore();

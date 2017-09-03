@@ -7,16 +7,15 @@ public class ExperienceBar : MonoBehaviour {
   // Eventually.. public RectTransform gainedExp
   //Array used as expRequired[leveldesired]
 
-  [SerializeField]
-  private int level = 1;
-  [SerializeField]
-  private float expObtained = 0;
-  [SerializeField]
-  private float expRequired = 100;
+
+  //playerdata - needs saved
+  public int currentLevel = 1;
+  public float currentExp = 0;
+  public float currentRequirement = 100;
+  public GameObject currentLevelText;
+
   [SerializeField]
   private float fillAmount;
-  [SerializeField]
-  private GameObject levelText;
   [SerializeField]
   private Image expBarSprite;
   [SerializeField]
@@ -32,11 +31,17 @@ public class ExperienceBar : MonoBehaviour {
   
   // Use this for initialization
   void Start () {
-    fillAmount = 0;
+    fillAmount = currentExp / currentRequirement;
   }
 
   // Update is called once per frame
   void Update () {
+    fillAmount = currentExp / currentRequirement;
+
+
+    if (currentLevelText.GetComponent<Text>().text != currentLevel.ToString()){
+      currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
+    }
 
     if (fillAmount != expBarSprite.fillAmount)
     {
@@ -47,7 +52,7 @@ public class ExperienceBar : MonoBehaviour {
     if (expBarSprite.fillAmount >= 1.0f)
     {
       LevelUp();
-      clicksNeeded = (expRequired - expObtained) / Increment;
+      clicksNeeded = (currentRequirement - currentExp) / Increment;
       fillAmount = 0;
     }
   }
@@ -55,28 +60,28 @@ public class ExperienceBar : MonoBehaviour {
   public void ExpMore()
   {
     ++clicks;
-    expObtained = expObtained + Increment;
-    fillAmount = (expObtained / expRequired);
+    currentExp = currentExp + Increment;
+    fillAmount = currentExp / currentRequirement;
     Debug.Log("fillAmount = " + fillAmount);
   }
 
   public void LevelUp()
   {
-    ++level;
-    levelText.GetComponent<Text>().text = level.ToString();
-    previousExpRequired = expRequired;
-    expObtained = 0;
-    expRequired = Mathf.Pow(expRequired, 1.05f);
+    ++currentLevel;
+    currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
+    previousExpRequired = currentRequirement;
+    currentExp = 0;
+    currentRequirement = Mathf.Pow(currentRequirement, 1.05f);
     GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RaiseRotationSpeed();
   }
 
   public void ResetExp()
   {
-    level = 1;
-    levelText.GetComponent<Text>().text = level.ToString();
+    currentLevel = 1;
+    currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
     fillAmount = 0;
-    expObtained = 0;
-    expRequired = 100;
+    currentExp = 0;
+    currentRequirement = 100;
     clicksNeeded = 10;
     clicks = 0;
   }
@@ -84,9 +89,17 @@ public class ExperienceBar : MonoBehaviour {
   public void ExpLess()
   {
     --clicks;
-    expObtained = expObtained - Increment;
-    fillAmount = (expObtained / expRequired);
+    currentExp = currentExp - Increment;
+    fillAmount = (currentExp / currentRequirement);
     Debug.Log("fillAmount = " + fillAmount);
   }
+
+  public float GetExperience()
+  {
+    float currentExp;
+    currentExp = this.currentExp;
+    return currentExp;
+  }
+
 
 }
