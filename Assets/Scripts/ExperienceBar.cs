@@ -68,7 +68,7 @@ public class ExperienceBar : MonoBehaviour {
     ++currentLevel;
     currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
     previousExpRequired = currentRequirement;
-    currentExp = 0;
+    currentExp -= previousExpRequired;
     currentRequirement = Mathf.Pow(currentRequirement, 1.05f);
     GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RaiseRotationSpeed();
   }
@@ -77,8 +77,8 @@ public class ExperienceBar : MonoBehaviour {
   {
     currentLevel = 1;
     currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
-    fillAmount = 0;
     currentExp = 0;
+    fillAmount = 0;
     currentRequirement = 100;
     clicksNeeded = 10;
     clicks = 0;
