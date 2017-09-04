@@ -60,7 +60,7 @@ public class ExperienceBar : MonoBehaviour {
     ++clicks;
     currentExp = currentExp + Increment;
     fillAmount = currentExp / currentRequirement;
-    Debug.Log("fillAmount = " + fillAmount);
+    //Debug.Log("fillAmount = " + fillAmount);
   }
 
   public void LevelUp()
