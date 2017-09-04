@@ -18,17 +18,13 @@ public class GameManager : MonoBehaviour {
     public float requirement;
     public float speed;
     public float increment;
+    public DateTime currentTime;
+
   }
 
-	// Update is called once per frame
-	void Update () {
+  // Update is called once per frame
+  void Update () {
 		
-	}
-
-
-	// Use this for initialization
-	void Start () {
-    Load();
 	}
 
   void OnEnable()
@@ -63,6 +59,7 @@ public class GameManager : MonoBehaviour {
     data.requirement = currentRequirement;
     data.speed = currentSpeed;
     data.increment = currentIncrement;
+    data.currentTime = DateTime.Now;
 
     bf.Serialize(file, data);
     file.Close();
@@ -83,7 +80,42 @@ public class GameManager : MonoBehaviour {
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentLevel = data.level;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp = data.experience;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentRequirement = data.requirement;
+
+      DateTime loadTime = DateTime.Now;
+      int secondsPassed = GetIdleRewards(data.currentTime, loadTime);
+      float radianSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed * Mathf.Deg2Rad;
+      float idleExp = radianSpeed * secondsPassed;
+      GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp += idleExp;
+
       Debug.Log("Loaded");
+      Debug.Log("idleExp: " + idleExp);
     }
   }
+
+  public int GetIdleRewards(DateTime saveTime, DateTime loadTime)
+  {
+    int daysPassed = 0;
+    int hoursPassed = 0;
+    int minutesPassed = 0;
+    int secondsPassed = 0;
+
+    for (int monthSaved = saveTime.Month; monthSaved < loadTime.Month; ++monthSaved)
+    {
+      daysPassed += 30;
+    }
+    daysPassed += loadTime.Day - saveTime.Day;
+
+    hoursPassed = daysPassed * 24;
+    hoursPassed += loadTime.Hour - saveTime.Hour;
+
+    minutesPassed = hoursPassed * 60;
+    minutesPassed += loadTime.Minute - saveTime.Minute;
+
+    secondsPassed = minutesPassed * 60;
+    secondsPassed += loadTime.Second - saveTime.Second;
+
+    Debug.Log("Seconds Passed: " + secondsPassed);
+    return secondsPassed;
+  }
+
 }

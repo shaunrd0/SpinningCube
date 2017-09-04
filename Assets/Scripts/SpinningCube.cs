@@ -8,7 +8,6 @@ public class SpinningCube : MonoBehaviour
   public float currentSpeed = 20f;
   public float currentIncrement = 10f;
 
-
   private string RotationDirection = "Up";
   private Vector3 m_RotationDirection = Vector3.up;
   private Vector3 rotationOrigin;
