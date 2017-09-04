@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class SpinningCube : MonoBehaviour 
@@ -6,7 +7,9 @@ public class SpinningCube : MonoBehaviour
 
   //Playerdata -- Needs saved
   public float currentSpeed = 20f;
-  public float currentIncrement = 10f;
+  public float currentIncrement = 20f;
+  public float rotationPerSec = 0.0f;
+
 
   private string RotationDirection = "Up";
   private Vector3 m_RotationDirection = Vector3.up;
@@ -18,11 +21,28 @@ public class SpinningCube : MonoBehaviour
   private float angleSum = 0;
 
   [SerializeField]
+  private float secPerRotation = 0.0f;
+
+  [SerializeField]
+  private float lastRPS = 0.0f;
+
+
+  [SerializeField]
+  private float secondsPassed = 0.0f;
+
+  [SerializeField]
   private int rotations;
 
-  public void OnDestroy()
+  public void Start()
   {
-    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().Save();
+
+    /*
+    if(GameObject.Find("Rotation Panel").activeSelf)
+    {
+      GameObject.Find("Rotation Direction Button").GetComponent<Button>().onClick.AddListener(() => { ToggleRotationDirection(); });
+
+    }
+    */
   }
 
   public void ToggleRotationDirection()
@@ -125,7 +145,7 @@ public class SpinningCube : MonoBehaviour
     angle2 = this.gameObject.transform.rotation.eulerAngles.y;
     //Difference between angle2 and angle1, how much the object rotated between frames
     angledif = angle2 - angle1;
-
+    secondsPassed += 0.02f;
     //rotations += (int)(m_Speed / 360);
 
     //if object is rotating, and angle difference is less than 0
@@ -136,6 +156,15 @@ public class SpinningCube : MonoBehaviour
     {
       ++rotations;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().ExpMore();
+
+      lastRPS = 1 / secondsPassed;
+      if(rotationPerSec != lastRPS)
+      {
+        rotationPerSec = lastRPS;
+        secPerRotation = secondsPassed;
+        Debug.Log("Rotations Per Second: " + rotationPerSec);
+      }
+      secondsPassed = 0.0f;
     }
   }
 }
