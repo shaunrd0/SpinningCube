@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
+
+
   void OnEnable()
   {    
     Load();
@@ -36,6 +38,20 @@ public class GameManager : MonoBehaviour {
   void OnApplicationPause()
   {
     Save();
+  }
+
+  void OnApplicationFocus(bool pauseStatus)
+  {
+    if (pauseStatus)
+    {
+      //your app is NO LONGER in the background
+      Load();
+    }
+    else
+    {
+      //your app is now in the background
+      Save();
+    }
   }
 
   void OnApplicationQuit()
@@ -62,7 +78,7 @@ public class GameManager : MonoBehaviour {
     data.speed = currentSpeed;
     data.increment = currentIncrement;
     data.rotationsPerSec = rotationPerSec;
-    data.currentTime = DateTime.Now;
+    data.currentTime = System.DateTime.Now;
 
     bf.Serialize(file, data);
     file.Close();
@@ -85,9 +101,8 @@ public class GameManager : MonoBehaviour {
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp = data.experience;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentRequirement = data.requirement;
 
-      DateTime loadTime = DateTime.Now;
+      DateTime loadTime = System.DateTime.Now;
       int secondsPassed = GetIdleTime(data.currentTime, loadTime);
-      float radianSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed * Mathf.Deg2Rad;
       float idleExp = (data.rotationsPerSec * secondsPassed) * data.increment;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp += idleExp;
 
