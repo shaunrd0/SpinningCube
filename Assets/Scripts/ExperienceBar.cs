@@ -32,11 +32,6 @@ public class ExperienceBar : MonoBehaviour {
     fillAmount = currentExp / currentRequirement;
   }
 
-  public void OnDestroy()
-  {
-    GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>().Save();
-  }
-
   // Update is called once per frame
   void Update () {
     fillAmount = currentExp / currentRequirement;

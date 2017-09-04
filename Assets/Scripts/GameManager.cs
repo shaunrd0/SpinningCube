@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     public float requirement;
     public float speed;
     public float increment;
+    public float rotationsPerSec;
     public DateTime currentTime;
 
   }
@@ -50,6 +51,7 @@ public class GameManager : MonoBehaviour {
     int currentLevel = GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentLevel;
     float currentExp = GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp;
     float currentRequirement = GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentRequirement;
+    float rotationPerSec = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().rotationPerSec;
     float currentSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed;
     float currentIncrement = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement;
 
@@ -59,6 +61,7 @@ public class GameManager : MonoBehaviour {
     data.requirement = currentRequirement;
     data.speed = currentSpeed;
     data.increment = currentIncrement;
+    data.rotationsPerSec = rotationPerSec;
     data.currentTime = DateTime.Now;
 
     bf.Serialize(file, data);
@@ -75,6 +78,7 @@ public class GameManager : MonoBehaviour {
       PlayerData data = (PlayerData)bf.Deserialize(file);
       file.Close();
 
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().rotationPerSec = data.rotationsPerSec;
       GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed = data.speed;
       GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement = data.increment;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentLevel = data.level;
@@ -82,9 +86,9 @@ public class GameManager : MonoBehaviour {
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentRequirement = data.requirement;
 
       DateTime loadTime = DateTime.Now;
-      int secondsPassed = GetIdleRewards(data.currentTime, loadTime);
+      int secondsPassed = GetIdleTime(data.currentTime, loadTime);
       float radianSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed * Mathf.Deg2Rad;
-      float idleExp = radianSpeed * secondsPassed;
+      float idleExp = (data.rotationsPerSec * secondsPassed) * data.increment;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp += idleExp;
 
       Debug.Log("Loaded");
@@ -92,7 +96,7 @@ public class GameManager : MonoBehaviour {
     }
   }
 
-  public int GetIdleRewards(DateTime saveTime, DateTime loadTime)
+  public int GetIdleTime(DateTime saveTime, DateTime loadTime)
   {
     int daysPassed = 0;
     int hoursPassed = 0;
