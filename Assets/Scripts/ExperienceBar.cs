@@ -20,15 +20,21 @@ public class ExperienceBar : MonoBehaviour {
   private float lerpSpeed;
   [SerializeField]
   private int clicks;
+
+  [SerializeField]
+  private GameObject eventSystem;
+
     
   private float clicksNeeded = 10;
   private float previousExpRequired;
   private float barMovement;
   private float barPosition;
   private float Increment = 10;
+  private string notify;
   
   // Use this for initialization
   void Start () {
+    eventSystem = GameObject.Find("EventSystem");
     fillAmount = currentExp / currentRequirement;
   }
 
@@ -60,6 +66,9 @@ public class ExperienceBar : MonoBehaviour {
     ++clicks;
     currentExp = currentExp + Increment;
     fillAmount = currentExp / currentRequirement;
+    notify = "+" + Increment + "EXP";
+    eventSystem.GetComponent<GameManager>().MakePopup(notify);
+
     //Debug.Log("fillAmount = " + fillAmount);
   }
 

@@ -24,38 +24,15 @@ public class GameManager : MonoBehaviour {
 
   }
 
-  public string notify;
-  public bool wait;
-  public bool activeOne;
-  public bool activeTwo;
-  public bool activeThree;
-  public bool activeFour;
   public float idleExp;
-  public GameObject popupOne;
-  public GameObject popupTwo;
-  public GameObject popupThree;
-  public GameObject popupFour;
-  public float timer;
 
-  // Update is called once per frame
-  void Update () {
-		
-	}
-
-
-
-  void OnEnable()
-  {    
-    Load();
-  }
-
-  void OnApplicationPause()
-  {
-    Save();
-  }
+  public GameObject popup;
+  public GameObject popupSpawn;
+  public string notify;
 
   void OnApplicationFocus(bool pauseStatus)
   {
+    Debug.Log("OnApplicationFocused");
     if (pauseStatus)
     {
       //your app is NO LONGER in the background
@@ -73,28 +50,6 @@ public class GameManager : MonoBehaviour {
     Save();
   }
 	
-  public void Start()
-  {
-    popupOne.SetActive(false);
-    popupTwo.SetActive(false);
-    popupThree.SetActive(false);
-    popupFour.SetActive(false);
-
-
-  }
-
-  void FixedUpdate()
-  {
-    UpdatePopups();
-    timer += 0.02f;
-    if(timer > 9999.0f)
-    {
-      timer = 0.0f;
-    }
-
-
-  }
-
   public void Save()
   {
     BinaryFormatter bf = new BinaryFormatter();
@@ -145,7 +100,7 @@ public class GameManager : MonoBehaviour {
       if (idleExp >= 0.0f)
       {
         string notification = ("+" + idleExp + "EXP");
-        SendNotification(notification);
+        MakePopup(notification);
       }
 
       Debug.Log("Loaded");
@@ -179,109 +134,11 @@ public class GameManager : MonoBehaviour {
     return secondsPassed;
   }
 
-  public void UpdatePopups()
+  public void MakePopup(string content)
   {
-
-    if (GameObject.Find("Pop-up Panel 1") == null)
-    {
-      activeOne = false;
-    }
-    else
-    {
-        activeOne = true;
-    }
-
-    if (GameObject.Find("Pop-up Panel 2") == null)
-    {
-      activeTwo = false;
-    }
-    else
-    {
-      activeTwo = true;
-    }
-
-    if (GameObject.Find("Pop-up Panel 3") == null)
-    {
-      activeThree = false;
-    }
-    else
-    {
-      activeThree = true;
-    }
-
-    if (GameObject.Find("Pop-up Panel 4") == null)
-    {
-      activeFour = false;
-    }else
-    {
-      activeFour = true;
-    }
-
-  }
-
-  public void SendNotification(string notification)
-  {
-
-    /*
-    List<GameObject> popups = new List<GameObject>();
-    GameObject[] allPopups = GameObject.Find("Notification Panel").GetComponentsInChildren<GameObject>(true);
-    foreach (GameObject obj in allPopups)
-    {
-      popups.Add(obj.GetComponent<GameObject>());
-    }
-    */
-
-
-
-    //Debug.Log("Number of Popups: " + popups.Count);
-
-
-    for (;;)
-    {
-      Debug.Log("For1");
-      if (wait == true)
-      {
-        Debug.Log("For1.1");
-        continue;
-      }else
-      {
-        Debug.Log("For1.1");
-        notify = notification;
-        break;
-      }
-    }
-
-
-    for (;;)
-    {
-      Debug.Log("For2");
-      if (activeOne == false)
-      {
-        popupOne.SetActive(true);
-        wait = false;
-        break;
-      } else if (activeTwo == false)
-      {
-        popupTwo.SetActive(true);
-        wait = false;
-        break;
-      } else if (activeThree == false)
-      {
-        popupThree.SetActive(true);
-        wait = false;
-        break;
-      } else if (activeFour == false)
-      {
-        popupFour.SetActive(true);
-        wait = false;
-        break;
-      } else
-      {
-        wait = true;
-        continue;
-      }
-    }
-
+    notify = content;
+    Instantiate(popup, popupSpawn.transform.position, popupSpawn.transform.rotation, GameObject.Find("Notification Panel").gameObject.transform );
+    Debug.Log("Popup Created");
   }
 
   public string GetNotify()
