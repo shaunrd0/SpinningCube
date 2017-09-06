@@ -29,7 +29,8 @@ public class ExperienceBar : MonoBehaviour {
   private float previousExpRequired;
   private float barMovement;
   private float barPosition;
-  private float Increment = 10;
+  [SerializeField]
+  public float expIncrement = 10.0f;
   private string notify;
   
   // Use this for initialization
@@ -41,7 +42,7 @@ public class ExperienceBar : MonoBehaviour {
   // Update is called once per frame
   void Update () {
     fillAmount = currentExp / currentRequirement;
-
+    this.gameObject.GetComponentInChildren<Text>().text = (int)currentExp + " / " + (int)currentRequirement;
 
     if (currentLevelText.GetComponent<Text>().text != currentLevel.ToString()){
       currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
@@ -56,7 +57,7 @@ public class ExperienceBar : MonoBehaviour {
     if (expBarSprite.fillAmount >= 1.0f)
     {
       LevelUp();
-      clicksNeeded = (currentRequirement - currentExp) / Increment;
+      clicksNeeded = (currentRequirement - currentExp) / expIncrement;
       fillAmount = 0;
     }
   }
@@ -64,10 +65,10 @@ public class ExperienceBar : MonoBehaviour {
   public void ExpMore()
   {
     ++clicks;
-    currentExp = currentExp + Increment;
+    currentExp = currentExp + expIncrement;
     fillAmount = currentExp / currentRequirement;
-    notify = "+" + Increment + "EXP";
-    eventSystem.GetComponent<GameManager>().MakePopup(notify);
+    notify = "+" + expIncrement + "EXP";
+    eventSystem.GetComponent<GameManager>().RewardPopup(expIncrement, 1);
 
     //Debug.Log("fillAmount = " + fillAmount);
   }
@@ -75,11 +76,15 @@ public class ExperienceBar : MonoBehaviour {
   public void LevelUp()
   {
     ++currentLevel;
+    expIncrement += 10;
     currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
     previousExpRequired = currentRequirement;
     currentExp -= previousExpRequired;
     currentRequirement = Mathf.Pow(currentRequirement, 1.05f);
     GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RaiseRotationSpeed();
+    notify = "Level " + currentLevel + "!";
+    eventSystem.GetComponent<GameManager>().RewardPopup(currentLevel, 2);
+
   }
 
   public void ResetExp()
@@ -88,17 +93,24 @@ public class ExperienceBar : MonoBehaviour {
     currentLevelText.GetComponent<Text>().text = currentLevel.ToString();
     currentExp = 0;
     fillAmount = 0;
+    expIncrement = 10.0f;
     currentRequirement = 100;
     clicksNeeded = 10;
     clicks = 0;
+    notify = "EXP Reset";
+    eventSystem.GetComponent<GameManager>().MakeStringPopup(notify, 1);
+
   }
 
   public void ExpLess()
   {
     --clicks;
-    currentExp = currentExp - Increment;
+    currentExp = currentExp - expIncrement;
     fillAmount = (currentExp / currentRequirement);
     Debug.Log("fillAmount = " + fillAmount);
+    notify = "-" + expIncrement + "EXP";
+    eventSystem.GetComponent<GameManager>().RewardPopup(-expIncrement, 1);
+
   }
 
   public float GetExperience()

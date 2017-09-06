@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour {
     public float experience;
     public float requirement;
     public float speed;
-    public float increment;
+    public float speedIncrement;
+    public float expIncrement;
     public float rotationsPerSec;
     public DateTime currentTime;
 
@@ -61,13 +62,15 @@ public class GameManager : MonoBehaviour {
     float rotationPerSec = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().rotationPerSec;
     float currentSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed;
     float currentIncrement = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement;
+    float currentExpIncrement = GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().expIncrement;
 
     PlayerData data = new PlayerData();
     data.level = currentLevel;
     data.experience = currentExp;
     data.requirement = currentRequirement;
     data.speed = currentSpeed;
-    data.increment = currentIncrement;
+    data.speedIncrement = currentIncrement;
+    data.expIncrement = currentExpIncrement;
     data.rotationsPerSec = rotationPerSec;
     data.currentTime = System.DateTime.Now;
 
@@ -87,20 +90,20 @@ public class GameManager : MonoBehaviour {
 
       GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().rotationPerSec = data.rotationsPerSec;
       GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed = data.speed;
-      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement = data.increment;
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement = data.speedIncrement;
+      GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().expIncrement = data.expIncrement;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentLevel = data.level;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp = data.experience;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentRequirement = data.requirement;
 
       DateTime loadTime = System.DateTime.Now;
       int secondsPassed = GetIdleTime(data.currentTime, loadTime);
-      idleExp = (data.rotationsPerSec * secondsPassed) * data.increment;
+      idleExp = (data.rotationsPerSec * secondsPassed) * data.expIncrement;
       GameObject.FindGameObjectWithTag("ExpGained").GetComponent<ExperienceBar>().currentExp += idleExp;
 
       if (idleExp >= 0.0f)
       {
-        string notification = ("+" + idleExp + "EXP");
-        MakePopup(notification);
+        RewardPopup(idleExp, 1);
       }
 
       Debug.Log("Loaded");
@@ -134,16 +137,31 @@ public class GameManager : MonoBehaviour {
     return secondsPassed;
   }
 
-  public void MakePopup(string content)
+
+  public int notificationType;
+  public float noteValue;
+  /*
+   * type 1 = exp
+   * type 2 = level
+   * 
+   * 
+   * 
+   * 
+   */
+  public void RewardPopup(float value, int type)
   {
-    notify = content;
+    notificationType = type;
+    noteValue = value;
     Instantiate(popup, popupSpawn.transform.position, popupSpawn.transform.rotation, GameObject.Find("Notification Panel").gameObject.transform );
     Debug.Log("Popup Created");
   }
 
-  public string GetNotify()
+  public void MakeStringPopup(string content, int type)
   {
-    return notify;
+    notify = content;
+    notificationType = type;
+    Instantiate(popup, popupSpawn.transform.position, popupSpawn.transform.rotation, GameObject.Find("Notification Panel").gameObject.transform);
+    Debug.Log("Popup Created");
   }
 
 }
