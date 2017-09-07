@@ -11,27 +11,27 @@ public class SpinningCube : MonoBehaviour
   public float rotationPerSec = 0.0f;
 
 
-  private string RotationDirection = "Up";
-  private Vector3 m_RotationDirection = Vector3.up;
-  private Vector3 rotationOrigin;
-  private Vector3 stopRotation = Vector3.zero;
-  private Vector3 tempRotation;
-  private float angle2 = 0;
-  private float angledif, angle1;
-  private float angleSum = 0;
+  public string RotationDirection = "Up";
+  public Vector3 m_RotationDirection = Vector3.up;
+  public Vector3 rotationOrigin;
+  public Vector3 stopRotation = Vector3.zero;
+  public Vector3 tempRotation;
+  public float angle2 = 0;
+  public float angledif, angle1;
+  public float angleSum = 0;
 
   [SerializeField]
-  private float secPerRotation = 0.0f;
+  public float secPerRotation = 0.0f;
 
   [SerializeField]
-  private float lastRPS = 0.0f;
+  public float lastRPS = 0.0f;
 
 
   [SerializeField]
-  private float secondsPassed = 0.0f;
+  public float secondsPassed = 0.0f;
 
   [SerializeField]
-  private int rotations;
+  public int rotations;
 
   public void Start()
   {
@@ -44,98 +44,6 @@ public class SpinningCube : MonoBehaviour
     }
     */
   }
-
-  public void ToggleRotationDirection()
-  {
-
-    if (m_RotationDirection == Vector3.up) 
-    {
-	    m_RotationDirection = Vector3.down;
-      RotationDirection = "Down";
-    }
-    else 
-    {
-	    m_RotationDirection = Vector3.up;
-      RotationDirection = "Up";
-    }
-    Debug.Log("Toggled rotation direction: " + RotationDirection);
-
-  }
-
-  public void ToggleRotation()
-  {
-    Debug.Log("Stopping Rotation. Last known rotation direction: " + RotationDirection);
-    stopRotation = Vector3.zero;
-        
-    if (m_RotationDirection == stopRotation)
-    {
-      m_RotationDirection = tempRotation; 
-    }
-    else {
-      tempRotation = m_RotationDirection;
-      m_RotationDirection = stopRotation;
-    }
-  }
-
-  public void RaiseRotationSpeed()
-  {
-    currentSpeed = currentSpeed + currentIncrement;
-    Debug.Log("Rotation Speed: " + currentSpeed);
-  }
-
-  public void LowerRotationSpeed()
-  {
-    currentSpeed = currentSpeed - currentIncrement;
-    Debug.Log("Rotation Speed: " + currentSpeed);
-  }
-
-  public void ResetRotationSpeed()
-  {
-    currentSpeed = 20.0f;
-    Debug.Log("Rotation Speed Reset");
-  }
-
-  public void ChangeColorWhite()
-  {
-    GameObject.FindGameObjectsWithTag("Player");
-    gameObject.GetComponent<Renderer>().material.color = Color.white;
-  }
-
-  public void ChangeColorBlue()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.blue;
-  }
-
-  public void ChangeColorBlack()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.black;
-  }
-
-  public void ChangeColorGreen()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.green;
-  }
-
-  public void ChangeColorRed()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.red;
-  }
-
-  public void ChangeColorMagenta()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.magenta;
-  }
-
-  public void ChangeColorYellow()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.yellow;
-  }
-
-  public void ChangeColorCyan()
-  {
-    gameObject.GetComponent<Renderer>().material.color = Color.cyan;
-  }
-
   void FixedUpdate()
   {
     //Set angle1 = eulerAngle of axis being rotated prior to applying rotation

@@ -16,29 +16,31 @@ public class ToggleMenus : MonoBehaviour
 
   //Shapes - Prefabs
   public GameObject player;
-  public GameObject Square;
+  public GameObject Cube;
   public GameObject Sphere;
   public GameObject Cylinder;
   public GameObject Capsule;
   public GameObject Temp;
   public GameObject mySpawn;
 
-  private string Spawn = "Spawn";
-  private string Active = "Cube";
-
   //Use with lighting menu
   //private GameObject lighting = GameObject.FindGameObjectWithTag("Lighting");
 
   public float lightRotX, lightRotY, lightRotZ;
+
+  private string Spawn = "Spawn";
+  private string Active = "Cube";
+
 
 
   // Use this for initialization
   void Start()
   {
     player = GameObject.FindGameObjectWithTag("Player");
+    mySpawn = GameObject.Find("PlayerSpawn");
     InitializeButtonArrays();
 
-    Temp = Square;
+    Temp = Cube;
     lightRotX = 0;
     lightRotY = 0;
     lightRotZ = 0;
@@ -159,41 +161,56 @@ public class ToggleMenus : MonoBehaviour
     expMenu.gameObject.SetActive(false);
   }
 
-  public void ChangeShapeSquare()
+  public void ChangeShape(string shape)
   {
-    Instantiate(Square, mySpawn.transform.position, mySpawn.transform.rotation);
-    Debug.Log("Destroy " + Active);
-    Destroy(GameObject.Find(Active));
-    Active = "Cube(Clone)";
-    Debug.Log(Active);
+    switch (shape)
+    {
+      case "Cube":
+        Instantiate(Cube, mySpawn.transform.position, mySpawn.transform.rotation);
+        Debug.Log("Destroy " + Active);
+        Destroy(GameObject.Find(Active));
+        Active = "Cube(Clone)";
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(Active);
+
+        break;
+
+      case "Sphere":
+        Instantiate(Sphere, mySpawn.transform.position, mySpawn.transform.rotation);
+        Debug.Log("Destroy " + Active);
+        Destroy(GameObject.Find(Active));
+        Active = "Sphere(Clone)";
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(Active);
+
+        break;
+
+      case "Capsule":
+        Instantiate(Capsule, mySpawn.transform.position, mySpawn.transform.rotation);
+        Debug.Log("Destroy " + Active);
+        Destroy(GameObject.Find(Active));
+        Active = "Capsule(Clone)";
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(Active);
+
+        break;
+
+      case "Cylinder":
+        Instantiate(Cylinder, mySpawn.transform.position, mySpawn.transform.rotation);
+        Debug.Log("Destroy " + Active);
+        Destroy(GameObject.Find(Active));
+        Active = "Cylinder(Clone)";
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(Active);
+
+        break;
+
+      default:
+        Debug.Log("Error - Not a valid shape : " + shape);
+        break;
+    }
   }
 
-  public void ChangeShapeSphere()
-  {
-    Instantiate(Sphere, mySpawn.transform.position, mySpawn.transform.rotation);
-    Debug.Log("Destroy " + Active);
-    Destroy(GameObject.Find(Active));
-    Active = "Sphere(Clone)";
-    Debug.Log(Active);
-  }
-
-  public void ChangeShapeCapsule()
-  {
-    Instantiate(Capsule, mySpawn.transform.position, mySpawn.transform.rotation);
-    Debug.Log("Destroy " + Active);
-    Destroy(GameObject.Find(Active));
-    Active = "Capsule(Clone)";
-    Debug.Log(Active);
-  }
-
-  public void ChangeShapeCylinder()
-  {
-    Instantiate(Cylinder, mySpawn.transform.position, mySpawn.transform.rotation);
-    Debug.Log("Destroy " + Active);
-    Destroy(GameObject.Find(Active));
-    Active = "Cylinder(Clone)";
-    Debug.Log(Active);
-  }
   /*
   public void EditLightingRotation()
   {
@@ -310,25 +327,25 @@ public class ToggleMenus : MonoBehaviour
     mainButtons[3].onClick.AddListener(() => { ToggleLightingMenu(); });
     mainButtons[4].onClick.AddListener(() => { ToggleExpMenu(); });
 
-    rotationButtons[0].onClick.AddListener(() => { player.GetComponent<SpinningCube>().RaiseRotationSpeed(); });
-    rotationButtons[1].onClick.AddListener(() => { player.GetComponent<SpinningCube>().LowerRotationSpeed(); });
-    rotationButtons[2].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ToggleRotation(); });
-    rotationButtons[3].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ToggleRotationDirection(); });
-    rotationButtons[4].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ResetRotationSpeed(); });
+    rotationButtons[0].onClick.AddListener(() => { RaiseRotationSpeed(); });
+    rotationButtons[1].onClick.AddListener(() => { LowerRotationSpeed(); });
+    rotationButtons[2].onClick.AddListener(() => { ToggleRotation(); });
+    rotationButtons[3].onClick.AddListener(() => { ToggleRotationDirection(); });
+    rotationButtons[4].onClick.AddListener(() => { ResetRotationSpeed(); });
 
-    colorButtons[0].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorBlack(); });
-    colorButtons[1].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorWhite(); });
-    colorButtons[2].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorRed(); });
-    colorButtons[3].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorGreen(); });
-    colorButtons[4].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorBlue(); });
-    colorButtons[5].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorYellow(); });
-    colorButtons[6].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorCyan(); });
-    colorButtons[7].onClick.AddListener(() => { player.GetComponent<SpinningCube>().ChangeColorMagenta(); });
+    colorButtons[0].onClick.AddListener(() => { ChangeColor("Black"); });
+    colorButtons[1].onClick.AddListener(() => { ChangeColor("White"); });
+    colorButtons[2].onClick.AddListener(() => { ChangeColor("Red"); });
+    colorButtons[3].onClick.AddListener(() => { ChangeColor("Green"); });
+    colorButtons[4].onClick.AddListener(() => { ChangeColor("Blue"); });
+    colorButtons[5].onClick.AddListener(() => { ChangeColor("Yellow"); });
+    colorButtons[6].onClick.AddListener(() => { ChangeColor("Cyan"); });
+    colorButtons[7].onClick.AddListener(() => { ChangeColor("Magenta"); });
 
-    shapesButtons[0].onClick.AddListener(() => { ChangeShapeCylinder(); });
-    shapesButtons[1].onClick.AddListener(() => { ChangeShapeCapsule(); });
-    shapesButtons[2].onClick.AddListener(() => { ChangeShapeSquare(); });
-    shapesButtons[3].onClick.AddListener(() => { ChangeShapeSphere(); });
+    shapesButtons[0].onClick.AddListener(() => { ChangeShape("Cylinder"); });
+    shapesButtons[1].onClick.AddListener(() => { ChangeShape("Capsule"); });
+    shapesButtons[2].onClick.AddListener(() => { ChangeShape("Cube"); });
+    shapesButtons[3].onClick.AddListener(() => { ChangeShape("Sphere"); });
 
     //Temporary save/load hidden in lighting for debug
     lightingButtons[0].onClick.AddListener(() => { GameObject.Find("EventSystem").GetComponent<GameManager>().Save(); });
@@ -339,5 +356,102 @@ public class ToggleMenus : MonoBehaviour
     expButtons[1].onClick.AddListener(() => { GameObject.Find("Gained Image").GetComponent<ExperienceBar>().ExpLess(); });
     expButtons[2].onClick.AddListener(() => { GameObject.Find("Gained Image").GetComponent<ExperienceBar>().ResetExp(); });
 
+  }
+
+  public void ToggleRotationDirection()
+  {
+
+    if (GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection == Vector3.up)
+    {
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection = Vector3.down;
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RotationDirection = "Down";
+    }
+    else
+    {
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection = Vector3.up;
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RotationDirection = "Up";
+    }
+    Debug.Log("Toggled rotation direction: " + GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RotationDirection);
+
+  }
+
+  public void ToggleRotation()
+  {
+    Debug.Log("Stopping Rotation. Last known rotation direction: " + GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RotationDirection);
+    GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().stopRotation = Vector3.zero;
+
+    if (GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection == GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().stopRotation)
+    {
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().tempRotation;
+    }
+    else
+    {
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().tempRotation = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection;
+      GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().m_RotationDirection = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().stopRotation;
+    }
+  }
+
+  public void RaiseRotationSpeed()
+  {
+    GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed + GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement;
+    Debug.Log("Rotation Speed: " + GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed);
+  }
+
+  public void LowerRotationSpeed()
+  {
+    GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed - GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentIncrement;
+    Debug.Log("Rotation Speed: " + GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed);
+  }
+
+  public void ResetRotationSpeed()
+  {
+    GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().currentSpeed = 20.0f;
+    Debug.Log("Rotation Speed Reset");
+  }
+
+  public void ChangeColor(string color)
+  {
+    switch (color)
+    {
+
+      case "White":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.white;
+        break;
+
+      case "Blue":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.blue;
+        break;
+
+      case "Black":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.black;
+        break;
+
+      case "Green":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.green;
+        break;
+
+      case "Red":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.red;
+        break;
+
+      case "Magenta":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.magenta;
+        break;
+
+      case "Yellow":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.yellow;
+        break;
+
+      case "Cyan":
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Renderer>().material.color = Color.cyan;
+        break;
+
+
+      default:
+        Debug.Log("Error - no color named :" + color);
+        break;
+        
+
+    }
   }
 }

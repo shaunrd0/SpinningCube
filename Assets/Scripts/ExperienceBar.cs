@@ -81,7 +81,7 @@ public class ExperienceBar : MonoBehaviour {
     previousExpRequired = currentRequirement;
     currentExp -= previousExpRequired;
     currentRequirement = Mathf.Pow(currentRequirement, 1.05f);
-    GameObject.FindGameObjectWithTag("Player").GetComponent<SpinningCube>().RaiseRotationSpeed();
+    GameObject.Find("Main Panel").GetComponent<ToggleMenus>().RaiseRotationSpeed();
     notify = "Level " + currentLevel + "!";
     eventSystem.GetComponent<GameManager>().RewardPopup(currentLevel, 2);
 
